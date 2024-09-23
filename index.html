@@ -1,0 +1,116 @@
+<!--
+Programa: OS BANANÂO
+Turma: 2L
+Nome: BRENO PIVANTI CEZARIO- Nº: 2.
+Nome: DAVID NICETTO- Nº5.
+Nome: VINICIUS DOS SANTOS PEREIRA POMPEU - Nº: 28.
+Nome: HENRIQUE CAVALCANTE SILVA - Nº: 29.
+-->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <title>Imagem</title>
+    <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        canvas {
+            border: 1px solid #d3d3d3;
+            background-color: #A0A0A0;
+        }
+        .controls {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .controls button {
+            margin: 5px;
+            padding: 10px;
+            font-size: 16px;
+        }
+    </style>
+    <script type="text/javascript">
+        var myGamePiece;
+        var moveInterval;
+
+        function startGame() {
+            myGamePiece = new component(30, 30, "red", 10, 120);
+            myGameArea.start();
+        }
+
+        var myGameArea = {
+            canvas: document.createElement("canvas"),
+            start: function() {
+                this.canvas.width = 480;
+                this.canvas.height = 270;
+                this.context = this.canvas.getContext('2d');
+                document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+                this.interval = setInterval(updateGameArea, 20);
+            },
+            clear: function() {
+                this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            }
+        };
+
+        function component(width, height, color, x, y) {
+            this.width = width;
+            this.height = height;
+            this.x = x;
+            this.y = y;
+            this.color = color;
+            this.update = function() {
+                var ctx = myGameArea.context;
+                ctx.fillStyle = this.color;
+                ctx.fillRect(this.x, this.y, this.width, this.height);
+            }
+            this.move = function(dir) {
+                const step = 5;
+                switch (dir) {
+                    case 'up':
+                        this.y -= step;
+                        break;
+                    case 'down':
+                        this.y += step;
+                        break;
+                    case 'left':
+                        this.x -= step;
+                        break;
+                    case 'right':
+                        this.x += step;
+                        break;
+                }
+            }
+        }
+
+        function updateGameArea() {
+            myGameArea.clear();
+            myGamePiece.update();
+        }
+
+        function startMoving(dir) {
+            moveInterval = setInterval(() => myGamePiece.move(dir), 20);
+        }
+
+        function stopMoving() {
+            clearInterval(moveInterval);
+        }
+
+        function handleMouseDown(dir) {
+            startMoving(dir);
+        }
+
+        function handleMouseUp() {
+            stopMoving();
+        }
+    </script>
+</head>
+<body onload="startGame();">
+    <div class="controls">
+        <button onmousedown="handleMouseDown('up')" onmouseup="handleMouseUp()">Cima</button>
+        <br>
+        <button onmousedown="handleMouseDown('left')" onmouseup="handleMouseUp()">Esquerda</button>
+        <button onmousedown="handleMouseDown('right')" onmouseup="handleMouseUp()">Direita</button>
+        <br>
+        <button onmousedown="handleMouseDown('down')" onmouseup="handleMouseUp()">Baixo</button>
+    </div>
+</body>
+</html>
